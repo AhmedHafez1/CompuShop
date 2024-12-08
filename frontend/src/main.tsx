@@ -5,6 +5,7 @@ import App from './App.tsx';
 import './assets/styles/index.css';
 import './assets/styles/bootstrap.custom.css';
 import HomeScreen from './screens/HomeScreen.tsx';
+import ProductScreen from './screens/ProductScreen.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -12,6 +13,7 @@ createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<HomeScreen />} />
+          <Route path="/product/:id" element={<ProductScreen />} />
         </Route>
       </Routes>
     </BrowserRouter>
