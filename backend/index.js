@@ -9,12 +9,12 @@ const port = process.env.PORT || 5000;
 app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/api/products', (req, res) => {
-  res.send(products);
+  res.json(products);
 });
 
 app.get('/api/products/:id', (req, res) => {
   const product = products.find((p) => p._id === req.params.id);
-  res.send(product);
+  res.json(product);
 });
 
 app.listen(port, () =>
