@@ -1,12 +1,23 @@
 import { useParams } from 'react-router-dom';
-import products from '../products';
 import { Col, Row, Image, ListGroup, Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Rating from '../components/Rating';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Product } from '../models/product.model';
 
 const ProductScreen = () => {
   const { id } = useParams();
-  const product = products.find((p) => p._id === id);
+  const [product, setProduct] = useState<Product | null>(null);
+
+  useEffect(() => {
+    const getProduct = async () => {
+      const { data } = await axios.get(`/api/products/${id}`);
+      setProduct(data);
+    };
+
+    getProduct();
+  }, [id]);
 
   return (
     <>
@@ -20,13 +31,15 @@ const ProductScreen = () => {
         <Col md={4}>
           <ListGroup variant="flush">
             <ListGroup.Item>
-              <h3>{product!.name}</h3>
+              <h3>{product?.name}</h3>
             </ListGroup.Item>
             <ListGroup.Item>
-              <Rating
-                value={product!.rating}
-                text={`${product?.numReviews} reviews`}
-              />
+              {product && (
+                <Rating
+                  value={product.rating}
+                  text={`${product.numReviews} reviews`}
+                />
+              )}
             </ListGroup.Item>
             <ListGroup.Item>{product?.description}</ListGroup.Item>
           </ListGroup>
@@ -47,7 +60,9 @@ const ProductScreen = () => {
                   <Col>Status:</Col>
                   <Col>
                     <strong>
-                      {product!.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
+                      {product && product.countInStock > 0
+                        ? 'In Stock'
+                        : 'Out Of Stock'}
                     </strong>
                   </Col>
                 </Row>
@@ -56,7 +71,7 @@ const ProductScreen = () => {
                 <Button
                   className="btn btn-block"
                   type="button"
-                  disabled={product!.countInStock === 0}
+                  disabled={!!product && product.countInStock === 0}
                 >
                   Add To Cart
                 </Button>
