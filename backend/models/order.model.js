@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-const orderSchema = Schema(
+const orderSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
