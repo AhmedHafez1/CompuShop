@@ -1,6 +1,8 @@
 import express from 'express';
 import Product from '../models/product.model.js';
 import asyncHandler from '../middleware/async.handler.js';
+import checkObjectId from '../middleware/checkObjectId.middleware.js';
+import { NotFoundError } from '../error/notFound.error.js';
 const router = express.Router();
 
 router.get(
@@ -13,14 +15,14 @@ router.get(
 
 router.get(
   '/:id',
-  asyncHandler(async (req, res) => {
+  asyncHandler(checkObjectId, async (req, res) => {
     const product = await Product.findById(req.params.id);
 
     if (product) {
       res.json(product);
     }
 
-    res.status(404).send();
+    throw new NotFoundError('No product available with the given id!');
   })
 );
 
