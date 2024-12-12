@@ -1,30 +1,14 @@
 import express from 'express';
-import Product from '../models/product.model.js';
-import asyncHandler from '../middleware/async.handler.js';
 import checkObjectId from '../middleware/checkObjectId.middleware.js';
-import { NotFoundError } from '../error/notFound.error.js';
+import {
+  getProductById,
+  getProducts,
+} from '../controllers/product.controller.js';
+
 const router = express.Router();
 
-router.get(
-  '/',
-  asyncHandler(async (req, res) => {
-    const products = await Product.find({});
-    res.json(products);
-  })
-);
+router.get('/', getProducts);
 
-router.get(
-  '/:id',
-  checkObjectId,
-  asyncHandler(async (req, res, next) => {
-    const product = await Product.findById(req.params.id);
-
-    if (product) {
-      res.json(product);
-    }
-
-    throw new NotFoundError('No product available with the given id!');
-  })
-);
+router.get('/:id', checkObjectId, getProductById);
 
 export default router;
