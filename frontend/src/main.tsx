@@ -6,16 +6,20 @@ import './assets/styles/index.css';
 import './assets/styles/bootstrap.custom.css';
 import HomeScreen from './screens/HomeScreen.tsx';
 import ProductScreen from './screens/ProductScreen.tsx';
+import { Provider } from 'react-redux';
+import store from './store.ts';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<HomeScreen />} />
-          <Route path="/product/:id" element={<ProductScreen />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<HomeScreen />} />
+            <Route path="/product/:id" element={<ProductScreen />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   </StrictMode>
 );
