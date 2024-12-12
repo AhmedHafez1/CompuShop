@@ -1,14 +1,19 @@
-import { Col, Row } from 'react-bootstrap';
+import { Alert, Col, Row } from 'react-bootstrap';
 import Product from '../components/Product';
 import { useGetProductsQuery } from '../slices/products.api.slice';
+import Loader from '../components/Loader';
 
 const HomeScreen = () => {
-  const { data: products, isLoading } = useGetProductsQuery();
+  const { data: products, isLoading, error } = useGetProductsQuery();
 
   return (
     <>
       {isLoading ? (
-        <h2>Loading...</h2>
+        <Loader />
+      ) : error ? (
+        <Alert variant="danger" className="my-3">
+          Something wrong happened while fetching the data!
+        </Alert>
       ) : (
         <Row>
           {products?.map((product) => (
