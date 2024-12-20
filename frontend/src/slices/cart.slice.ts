@@ -1,23 +1,37 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState = localStorage.getItem('cart')
+interface CartItem {
+  _id: string;
+  price: number;
+  qty: number;
+}
+
+interface CartState {
+  cartItems: CartItem[];
+  itemsPrice: number;
+  shippingPrice: number;
+  tax: number;
+  totalPrice: number;
+}
+
+const initialState: CartState = localStorage.getItem('cart')
   ? JSON.parse(localStorage.getItem('cart')!)
   : { cartItems: [], itemsPrice: 0, shippingPrice: 0, tax: 0, totalPrice: 0 };
 
-export function addDecimal(num: number) {
+function addDecimal(num: number): number {
   return Number(Math.round((num * 100) / 100).toFixed());
 }
-export const cartSlice = createSlice({
+
+const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart: (state, action) => {
+    addToCart: (state: CartState, action: PayloadAction<CartItem>) => {
       const item = action.payload;
-      const existingItem = state.cartItems.find((x: any) => x._id === item._id);
+      const existingItem = state.cartItems.find((x) => x._id === item._id);
       if (existingItem) {
-        state.cartItems = state.cartItems.map((x: any) =>
-          x._id === item.id ? item : x
+        state.cartItems = state.cartItems.map((x) =>
+          x._id === item._id ? item : x
         );
       } else {
         state.cartItems = [...state.cartItems, item];
@@ -42,4 +56,8 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+const { addToCart } = cartSlice.actions;
+
+export { addDecimal, addToCart };
+
+export default cartSlice.reducer;
